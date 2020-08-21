@@ -8,11 +8,12 @@ ArrayList<Mover> moveListe = new ArrayList<Mover>();
 
 void setup() {
   size(640, 360);
+  frameRate(60);
 
   velocity = new PVector(2.5, 5);
 
   for (int i = 0; i< 2; i++) {
-    moveListe.add(new Mover(location = new PVector(100+ 50*i, 100)));
+    moveListe.add(new Mover(location = new PVector(100, 100 + 50 * i)));
   }
 }
 
@@ -43,11 +44,12 @@ void draw() {
     mover.display();
     mover.checkEdges();
   }
+  
 
   if (mousePressed) {
     for (int i = 0; i< moveListe.size(); i++) {
       Mover mover = moveListe.get(i);
-      PVector wind = new PVector(0, -10);
+      PVector wind = new PVector(5, 0);
       mover.applyForce(wind);
     }
   }
@@ -114,6 +116,7 @@ class Mover {
     if (location.x > width-16) {
       location.x = width-16;
       velocity.x *= -1;
+      acceleration.mult(-1);
     } else if (location.x < 0) {
       velocity.x *= -1;
       location.x = 0;
