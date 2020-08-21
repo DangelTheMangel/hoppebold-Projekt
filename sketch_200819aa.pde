@@ -19,6 +19,15 @@ void setup() {
 void draw() {
   clear();
   background(255);
+  
+    for(int i = 0; i < width; ++i){
+    
+  float x = i;
+  float y = 3 * sin(x + PI/3 ) + (height - 60);
+  noStroke();
+  ellipse(x,y,3,3);
+  }
+  
   for (int i = 0; i< moveListe.size(); i++) {
     Mover mover = moveListe.get(i);
     
