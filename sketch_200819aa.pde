@@ -19,26 +19,27 @@ void setup() {
 void draw() {
   clear();
   background(255);
-  
-    for(int i = 0; i < width; ++i){
-    
-  float x = i;
-  float y = 3 * sin(x + PI/3 ) + (height - 60);
-  noStroke();
-  ellipse(x,y,3,3);
+
+  for (int i = 0; i < width; ++i) {
+
+    float x = i;
+    float y = 3 * sin(x + PI/3 ) + (height - 60);
+    noStroke();
+    ellipse(x, y, 3, 3);
   }
-  
+
   for (int i = 0; i< moveListe.size(); i++) {
     Mover mover = moveListe.get(i);
-    
-    if (i == 1) {
-      mover.applyForce(gravity1);
-      mover.ShitUdate();
-    } else {
-      mover.applyForce(gravity2);
-      mover.update();
-    }
 
+    /*if (i == 1) {
+     mover.applyForce(gravity1);
+     mover.ShitUdate();
+     } else {
+     mover.applyForce(gravity2);
+     mover.update();
+     }*/
+    mover.applyForce(gravity1);
+    mover.update();
     mover.display();
     mover.checkEdges();
   }
@@ -110,7 +111,7 @@ class Mover {
 
   //Somewhat arbitrarily, we are deciding that an object bounces when it hits the edges of a window.
   void checkEdges() {
-        if (location.x > width-16) {
+    if (location.x > width-16) {
       location.x = width-16;
       velocity.x *= -1;
     } else if (location.x < 0) {
@@ -123,10 +124,9 @@ class Mover {
       location.y = height-16;
       velocity.y *= -1;
       acceleration.mult(-1);
-    } else if (location.y < 0){
+    } else if (location.y < 0) {
       velocity.y *= -1;
       location.y = 0;
-      }
     }
   }
-
+}
