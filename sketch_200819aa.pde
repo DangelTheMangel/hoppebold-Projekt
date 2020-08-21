@@ -6,7 +6,6 @@ ArrayList<Mover> moveListe = new ArrayList<Mover>();
 
 
 
-
 void setup() {
   size(640, 360);
 
@@ -102,19 +101,23 @@ class Mover {
 
   //Somewhat arbitrarily, we are deciding that an object bounces when it hits the edges of a window.
   void checkEdges() {
-    if (location.x > width) {
-      location.x = width;
+        if (location.x > width-16) {
+      location.x = width-16;
       velocity.x *= -1;
     } else if (location.x < 0) {
       velocity.x *= -1;
       location.x = 0;
     }
 
-    if (location.y  > height-1) {
+    if (location.y > height-16) {
       //Even though we said we shouldn't touch location and velocity directly, there are some exceptions. Here we are doing so as a quick and easy way to reverse the direction of our object when it reaches the edge.
-      location.y = height;
+      location.y = height-16;
       velocity.y *= -1;
       acceleration.mult(-1);
+    } else if (location.y < 0){
+      velocity.y *= -1;
+      location.y = 0;
+      }
     }
   }
-}
+
