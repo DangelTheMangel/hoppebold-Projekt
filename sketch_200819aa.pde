@@ -12,8 +12,8 @@ void setup() {
 
   velocity = new PVector(2.5, 5);
 
-  for (int i = 0; i< 2; i++) {
-    moveListe.add(new Mover(location = new PVector(100, 100 + 50 * i)));
+  for (int i = 0; i * 10< 90; i++) {
+    moveListe.add(new Mover(location = new PVector(100 + i, 100 + 50 * i)));
   }
 }
 
@@ -32,19 +32,28 @@ void draw() {
   for (int i = 0; i< moveListe.size(); i++) {
     Mover mover = moveListe.get(i);
 
-    /*if (i == 1) {
-     mover.applyForce(gravity1);
-     mover.ShitUdate();
-     } else {
-     mover.applyForce(gravity2);
-     mover.update();
-     }*/
+    if (i == 1) {
+      mover.applyForce(gravity1);
+      mover.ShitUdate();
+    } else {
+      mover.applyForce(gravity2);
+      mover.update();
+    }
     mover.applyForce(gravity1);
     mover.update();
     mover.display();
     mover.checkEdges();
   }
-  
+
+  for (int i = 0; i  == moveListe.size(); ++i) {
+    for (int j = 0; j == moveListe.size(); ++j){
+        if(x1 > x2 - 16 && x1 < x2 + 16 && y1 > y2 - 16 && y1 < y2 + 16){
+          
+        }
+    }  
+  }
+
+
 
   if (mousePressed) {
     for (int i = 0; i< moveListe.size(); i++) {
@@ -56,11 +65,14 @@ void draw() {
 }
 
 
+
 class Mover {
 
   PVector location;
   PVector velocity;
   PVector acceleration;
+  Boolean Collison = false;
+  
 
   //The object now has mass!
   float mass;
