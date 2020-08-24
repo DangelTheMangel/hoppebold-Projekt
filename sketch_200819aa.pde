@@ -1,6 +1,8 @@
 PVector gravity= new PVector(0, 2);
 ArrayList<Ball> ballList = new ArrayList<Ball>();
 ArrayList<Ball> groundList = new ArrayList<Ball>();
+ArrayList<PVector> RBGList = new ArrayList<PVector>();
+AlmindeligKnap btnAddBall;
 int numBalls = 6;
 
 void setup() {
@@ -28,16 +30,32 @@ void setup() {
     float y  = 400;
     location = new PVector(x, y);
     velocity = new PVector(0, 0);
-    RBG = new PVector(random(0, 255), random(0, 255), random(0, 255));
+    RBG = new PVector(random(1, 100), random(0, 100), random(0, 100));
     Ball ball = new Ball(location, velocity, RBG, 180 );
     groundList.add(ball);
   }
+  
+  // RBGliste
+    for (int i = 0; i < width; i++) {
+
+    PVector RBGA = new PVector(random(110,255),random(110,255),random(110,255));
+    RBGList.add(RBGA);
+  }
+  btnAddBall = new AlmindeligKnap(this, 10, 10, height/6, height/6, "+") ;
 }
 
 void draw() {
   clear();
   background(255);
+  //bagrund
+  for(int o = 0; o < width/10 + 1; ++o){
+   for(int p = 0; p < height/10 + 1; ++p){
+     fill(RBGList.get(p).x, RBGList.get(p).y, RBGList.get(p).z);
+        ellipse(o*10,p*10, 20, 20);
+    }
+  }
 
+  //udsende
   for (int i = 0; i< ballList.size(); i++) {
     Ball ball = ballList.get(i);
     ball.checkEdges();
@@ -50,8 +68,22 @@ void draw() {
     Ball ball = groundList.get(i);
     ball.display();
   }
-}
 
+  btnAddBall.tegnKnap();
+}
+public void mousePressed() {
+  btnAddBall.registrerRelease();
+  btnAddBall.registrerKlik(mouseX, mouseY);
+
+  if (btnAddBall.erKlikket()) {
+    PVector loc = new PVector(random(0, width), random(0, height));
+    PVector vel = new PVector(-10, 10);
+    PVector RBG = new PVector(196, 196, 196);
+
+    ballList.add(new Ball(loc, vel, RBG, 32));
+    ballList.get(ballList.size() - 1).applyForce(gravity);
+  }
+}
 /**
  * Class for describing a ball and its movements.
  */
@@ -174,5 +206,77 @@ class Ball {
         other.velocity.y += ay;
       }
     }
+  }
+}
+
+
+public abstract class Knap {
+  //variabler
+  float positionX, positionY, sizeX, sizeY;
+  float mouseX, mouseY;
+  String text;
+  boolean klikket = false;
+
+
+  PApplet p;
+
+  Knap(PApplet papp, int posX, int posY, int sizeX, int sizeY, String text ) {
+    p = papp;
+    positionX = posX;
+    positionY = posY;
+    this.sizeX = sizeX;
+    this.sizeY = sizeY;
+    this.text = text;
+  }
+
+  void klik() {
+    if (p.mousePressed &&
+      mouseX > positionX &&
+      mouseX < positionX + sizeX &&
+      mouseY > positionY &&
+      mouseY < positionY + sizeY) {
+    }
+  }
+
+  void setTekst(String tekst) {
+    p.fill(0);
+
+    p.text(tekst, positionX +(sizeX/16), positionY + (sizeY/2));
+  }
+
+  void tegnKnap() {
+    p.stroke(1, 46, 74, 100);
+    p.noFill();
+    p.rect(positionX, positionY, sizeX, sizeY);
+    setTekst(text);
+  }
+
+  boolean erKlikket() {
+    return klikket;
+  }
+
+  abstract void registrerKlik(float mouseX, float mouseY);
+}
+
+public class AlmindeligKnap extends Knap {
+
+  AlmindeligKnap(PApplet papp, int posX, int posY, int sizeX, int sizeY, String text) {
+    super(papp, posX, posY, sizeX, sizeY, text  );
+  }
+
+  @Override
+    void registrerKlik(float mouseX, float mouseY) {
+    this.mouseX = mouseX;
+    this.mouseY = mouseY;
+    if (mouseX > positionX &&
+      mouseX < positionX + sizeX &&
+      mouseY > positionY &&
+      mouseY < positionY + sizeY) {
+      klikket = true;
+    }
+  }
+
+  void registrerRelease() {
+    klikket = false;
   }
 }
