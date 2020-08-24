@@ -1,7 +1,7 @@
-PVector gravity= new PVector(0, 9);
+PVector gravity= new PVector(0, 2);
 ArrayList<Ball> ballList = new ArrayList<Ball>();
 ArrayList<Ball> groundList = new ArrayList<Ball>();
-int numBalls = 4;
+int numBalls = 6;
 
 void setup() {
   size(640, 360);
@@ -14,22 +14,22 @@ void setup() {
 
   // Moving balls
   for (int i = 0; i < numBalls; i++) {
-    location = new PVector(100 + i, 100 + 50 * i);
+    location = new PVector(random(0, width), random(0, height));
     velocity = new PVector(-10, 0);
     RBG = new PVector(196, 196, 196);
-    Ball ball = new Ball(location, velocity, RBG);
+    Ball ball = new Ball(location, velocity, RBG, 32);
     ball.applyForce(gravity);
     ballList.add(ball);
   }
 
   // Ground balls
   for (int i = 0; i < width/16 + 1; i++) {
-    int x  = i * 16;
-    float y  = 3 * sin(x + PI/3 ) + (height - 60) ;
+    int x  = i * 160;
+    float y  = 400;
     location = new PVector(x, y);
     velocity = new PVector(0, 0);
     RBG = new PVector(random(0, 255), random(0, 255), random(0, 255));
-    Ball ball = new Ball(location, velocity, RBG);
+    Ball ball = new Ball(location, velocity, RBG, 180 );
     groundList.add(ball);
   }
 }
@@ -50,8 +50,6 @@ void draw() {
     Ball ball = groundList.get(i);
     ball.display();
   }
-
- 
 }
 
 /**
@@ -68,10 +66,11 @@ class Ball {
   int radius = diameter/2;
   float spring = 0.05;
 
-  Ball(PVector location, PVector velocity, PVector RBG) {
+  Ball(PVector location, PVector velocity, PVector RBG, int diameter ) {
     this.location = location;
     this.velocity = velocity;
     this.RBG = RBG;
+    this.diameter = diameter;
     acceleration = new PVector(0, 0);
   }
 
@@ -86,15 +85,14 @@ class Ball {
   void updateMotion() {
     // Friction
     PVector friction = velocity.copy();
-    friction.mult(-.01);
-
+    friction.mult(-.04);
 
     // Motion 
     velocity.add(friction);
     velocity.add(acceleration);
     location.add(velocity);
 
-    println("friction: " + friction + " acceleration: " + acceleration + " velocity: " + velocity + " location: " + location);
+    //herprintln("friction: " + friction + " acceleration: " + acceleration + " velocity: " + velocity + " location: " + location);
   }
 
   void display() {
@@ -119,12 +117,12 @@ class Ball {
     if (location.y > height - radius) {      
       velocity.y *= -1;
       location.y = height - radius;
-      println("her" + velocity);
+      //println("her" + velocity);
     } else if (location.y < 0 ) {
       velocity.y *= -1;
       location.y = 0  + radius;
     }
-
+    boolean rev = false;
     // Check ground balls
     for (int i = 0; i < groundList.size(); i++) {
       Ball ground = groundList.get(i);
@@ -132,11 +130,18 @@ class Ball {
       float dy = ground.location.y - location.y;
       float distance = sqrt(dx*dx + dy*dy);
       float minDist = ground.diameter/2 + diameter/2;
+
       if (distance < minDist) {
-        velocity.x *= -1;
-        velocity.y *= -1;
-        location.y = ground.location.y - diameter;
-        location.x = ground.location.x - diameter;
+        float angle = atan2(dy, dx);
+        float targetX = ground.location.x - cos(angle) * minDist;
+        float targetY = ground.location.y - sin(angle) * minDist;
+
+
+        location.x = targetX;
+        location.y = targetY;
+        if (rev == false)
+          velocity.mult(-1);
+        rev = true;
       }
     }
   }
@@ -157,14 +162,16 @@ class Ball {
         float targetY = location.y + sin(angle) * minDist;
         float ax = (targetX - other.location.x) * spring;
         float ay = (targetY - other.location.y) * spring;
+
+        //location.x = targetX;
+        //location.y = targetY;
+
         velocity.x -= ax;
         velocity.y -= ay;
 
-        if (other.velocity.mag() > 0) {
-          other.velocity.x += ax;
-          other.velocity.y += ay;
-        } else
-          println("halløj");
+
+        other.velocity.x += ax;
+        other.velocity.y += ay;
       }
     }
   }
