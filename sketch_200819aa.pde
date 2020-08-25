@@ -1,3 +1,4 @@
+//We start off by stating our ArrayList's and our other variables qhich we need in this program
 PVector gravity= new PVector(0, 2);
 ArrayList<Ball> ballList = new ArrayList<Ball>();
 ArrayList<Ball> groundList = new ArrayList<Ball>();
@@ -6,6 +7,7 @@ AlmindeligKnap btnAddBall;
 AlmindeligKnap btnRestart;
 int numBalls = 6;
 
+//We are here telling the program to run at a certain size and to run different function groups
 void setup() {
   size(640, 360);
   frameRate(60);
@@ -15,6 +17,7 @@ void setup() {
   PVector RBG;
   //velocity = new PVector(2.5, 5);
 
+//Here is the code for the moving balls
   // Moving balls
   for (int i = 0; i < numBalls; i++) {
     location = new PVector(random(0, width), random(0, height));
@@ -25,6 +28,7 @@ void setup() {
     ballList.add(ball);
   }
 
+//Here is the code for the balls that make up our floor
   // Ground balls
   for (int i = 0; i < width/16 + 1; i++) {
     int x  = i * 160;
@@ -36,6 +40,7 @@ void setup() {
     groundList.add(ball);
   }
 
+//Here is the code that tells the program what colors that can be added to both the background and the floor
   // RBGliste
   for (int i = 0; i < width; i++) {
 
@@ -57,6 +62,7 @@ void draw() {
     }
   }
 
+//Here is the moving balls code to make it have a mass
   //udsende
   for (int i = 0; i< ballList.size(); i++) {
     Ball ball = ballList.get(i);
@@ -66,6 +72,7 @@ void draw() {
     ball.display();
   }
 
+//Here is the code for the button that adds 1 ball for every press
   for (int i = 0; i< groundList.size(); i++) {
     Ball ball = groundList.get(i);
     ball.display();
@@ -90,6 +97,7 @@ public void mousePressed() {
     ballList.get(ballList.size() - 1).applyForce(gravity);
   }
 
+//Here is the code for the program reset button
   if (btnRestart.erKlikket()) {
     println("fuck");
     
@@ -194,6 +202,7 @@ class Ball {
     }
   }
 
+//Here is the code that keeps check on what balls are hitting eachother
   void collide() {
     for (int i = 0; i < ballList.size(); i++) {
       Ball other = ballList.get(i);
@@ -242,6 +251,7 @@ public abstract class Knap {
     this.text = text;
   }
 
+//Click function
   void klik() {
     if (p.mousePressed &&
       mouseX > positionX &&
@@ -257,6 +267,7 @@ public abstract class Knap {
     p.text(tekst, positionX +(sizeX/16), positionY + (sizeY/2));
   }
 
+//Drawing the buttons
   void tegnKnap() {
     p.stroke(1, 46, 74, 100);
     p.fill(255, 255, 255, 100);
