@@ -3,6 +3,7 @@ ArrayList<Ball> ballList = new ArrayList<Ball>();
 ArrayList<Ball> groundList = new ArrayList<Ball>();
 ArrayList<PVector> RBGList = new ArrayList<PVector>();
 AlmindeligKnap btnAddBall;
+AlmindeligKnap btnRestart;
 int numBalls = 6;
 
 void setup() {
@@ -30,28 +31,29 @@ void setup() {
     float y  = 400;
     location = new PVector(x, y);
     velocity = new PVector(0, 0);
-    RBG = new PVector(random(1, 100), random(0, 100), random(0, 100));
+    RBG = new PVector(random(75, 150), random(75, 150), random(75, 150));
     Ball ball = new Ball(location, velocity, RBG, 180 );
     groundList.add(ball);
   }
-  
-  // RBGliste
-    for (int i = 0; i < width; i++) {
 
-    PVector RBGA = new PVector(random(110,255),random(110,255),random(110,255));
+  // RBGliste
+  for (int i = 0; i < width; i++) {
+
+    PVector RBGA = new PVector(random(160, 255), random(160, 255), random(160, 255));
     RBGList.add(RBGA);
   }
   btnAddBall = new AlmindeligKnap(this, 10, 10, height/6, height/6, "+") ;
+  btnRestart = new AlmindeligKnap(this, 20 +  height/6, 10, height/6, height/6, "Restet") ;
 }
 
 void draw() {
   clear();
   background(255);
   //bagrund
-  for(int o = 0; o < width/10 + 1; ++o){
-   for(int p = 0; p < height/10 + 1; ++p){
-     fill(RBGList.get(p).x, RBGList.get(p).y, RBGList.get(p).z);
-        ellipse(o*10,p*10, 20, 20);
+  for (int o = 0; o < width/10 + 1; ++o) {
+    for (int p = 0; p < height/10 + 1; ++p) {
+      fill(RBGList.get(p).x, RBGList.get(p).y, RBGList.get(p).z);
+      ellipse(o*10, p*10, 20, 20);
     }
   }
 
@@ -70,10 +72,14 @@ void draw() {
   }
 
   btnAddBall.tegnKnap();
+  btnRestart.tegnKnap();
 }
 public void mousePressed() {
   btnAddBall.registrerRelease();
   btnAddBall.registrerKlik(mouseX, mouseY);
+
+  btnRestart.registrerRelease();
+  btnRestart.registrerKlik(mouseX, mouseY);
 
   if (btnAddBall.erKlikket()) {
     PVector loc = new PVector(random(0, width), random(0, height));
@@ -82,6 +88,16 @@ public void mousePressed() {
 
     ballList.add(new Ball(loc, vel, RBG, 32));
     ballList.get(ballList.size() - 1).applyForce(gravity);
+  }
+
+  if (btnRestart.erKlikket()) {
+    println("fuck");
+    
+    ballList.clear();
+    groundList.clear();
+    RBGList.clear();
+    
+    setup();
   }
 }
 /**
@@ -195,9 +211,6 @@ class Ball {
         float ax = (targetX - other.location.x) * spring;
         float ay = (targetY - other.location.y) * spring;
 
-        //location.x = targetX;
-        //location.y = targetY;
-
         velocity.x -= ax;
         velocity.y -= ay;
 
@@ -246,7 +259,7 @@ public abstract class Knap {
 
   void tegnKnap() {
     p.stroke(1, 46, 74, 100);
-    p.noFill();
+    p.fill(255, 255, 255, 100);
     p.rect(positionX, positionY, sizeX, sizeY);
     setTekst(text);
   }
