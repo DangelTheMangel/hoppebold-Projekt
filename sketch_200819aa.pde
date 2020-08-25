@@ -43,7 +43,7 @@ void setup() {
     RBGList.add(RBGA);
   }
   btnAddBall = new AlmindeligKnap(this, 10, 10, height/6, height/6, "+") ;
-  btnRestart = new AlmindeligKnap(this, 20 +  height/6, 10, height/6, height/6, "Restet") ;
+  btnRestart = new AlmindeligKnap(this, 20 +  height/6, 10, height/6, height/6, "Reset") ;
 }
 
 void draw() {
